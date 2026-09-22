@@ -1,0 +1,19 @@
+* text=auto
+
+# Unity YAML (Force Text)
+*.unity text
+*.prefab text
+*.asset text
+*.mat text
+*.meta text
+*.terrainlayer text
+*.inputactions text
+
+# Двоичные файлы
+*.png binary
+*.jpg binary
+*.fbx binary
+*.blend binary
+*.dll binary
+*.wav binary
+*.ogg binary
