@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b57ab894738cce14aa49fb27c9d2aa54, type: 3}
+  m_Name: MotionSettings
+  m_EditorClassIdentifier: Assembly-CSharp::Mehatron.Motion.MotionSettings
+  masterIntensity: 0.3
+  maxRatePerSecond: 3
+  fadeTime: 2
+  sendRateHz: 100
+  bodyTiltFullScaleDeg: 25
+  bodyTiltGain: 0.8
+  longAccelFullScale: 8
+  longAccelTiltGain: 0.35
+  latAccelFullScale: 8
+  latAccelTiltGain: 0.35
+  accelSmoothing: 0.12
+  washoutTime: 0.8
+  surgeGain: 0.6
+  swayGain: 0.6
+  heaveGain: 0.5
+  heaveAccelFullScale: 10
+  yawRateFullScale: 60
+  yawGain: 0.4
+  landingHeaveKick: 1
+  landingPitchKick: 0.35
+  impactKick: 0.5
+  kickStiffness: 180
+  kickDamping: 14
+  roughnessHeave: 0.25
+  roughnessTilt: 0.08
+  roughnessFrequency: 14
+  usePitch: 1
+  useRoll: 1
+  useHeave: 1
+  useYaw: 1
+  useSurge: 0
+  useSway: 0

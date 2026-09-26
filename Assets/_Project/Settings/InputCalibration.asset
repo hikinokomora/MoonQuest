@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 256cc106b2d6da34ab86155772f46f89, type: 3}
+  m_Name: InputCalibration
+  m_EditorClassIdentifier: Assembly-CSharp::Mehatron.Vehicle.InputCalibration
+  steerPath: <Joystick>/stick/x
+  invertSteer: 0
+  steerSensitivity: 2
+  steerDeadzone: 0.01
+  throttlePath: <Joystick>/z
+  throttleRange: 1
+  brakePath: <Joystick>/rz
+  brakeRange: 1
+  pedalDeadzone: 0.05
+  startButtonPath: <Joystick>/trigger
+  handbrakeButtonPath: <Joystick>/button2
+  recenterButtonPath: <Joystick>/button3
+  resetRoverButtonPath: <Joystick>/button4
+  flightStickNames:
+  - T.16000
+  - T.Flight
+  - TWCS
+  - Warthog
+  - HOTAS
+  - Extreme 3D
+  - X52
+  - X56
+  - X-56
+  - VKB
+  - VIRPIL
+  - Gladiator
+  - Flight
+  unknownJoystickRole: 0
+  stickSteerAxis: 0
+  stickRollPath: <Joystick>/stick/x
+  stickTwistPath: <Joystick>/{Twist}
+  stickPitchPath: <Joystick>/stick/y
+  invertStickPitch: 0
+  stickDeadzone: 0.08
+  stickExpo: 0.35
+  stickSteerSensitivity: 1
+  useThrottleLever: 1
+  throttleLeverPath: <Joystick>/slider
+  throttleLeverRange: 2
+  stickStartButtonPath: <Joystick>/trigger
+  stickHandbrakeButtonPath: <Joystick>/button2
+  stickRecenterButtonPath: <Joystick>/button3
+  stickResetRoverButtonPath: <Joystick>/button4
