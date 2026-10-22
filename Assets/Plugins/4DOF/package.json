@@ -1,0 +1,7 @@
+{
+  "name": "com.tvp.4dof",
+  "displayName": "4DOF",
+  "version": "1.0.0",
+  "description": "The plugin sends all six degrees of freedom (pitch, roll, yaw, surge, sway, heave) to the X-DOF application that controls the 4DOF motion platform.",
+  "dependencies": {}
+}
