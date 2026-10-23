@@ -1,0 +1,7 @@
+{
+  "name": "com.tvp.moza",
+  "displayName": "MOZA",
+  "version": "1.0.0",
+  "description": "The plugin reads the MOZA steering wheel base, rim buttons, pedals, handbrake and shifter in Unity through the official MOZA SDK.",
+  "dependencies": {}
+}
