@@ -1,0 +1,9 @@
+{
+  "name": "com.tvp.thrustmaster-t16000m",
+  "displayName": "Thrustmaster T.16000M FCS",
+  "version": "1.0.0",
+  "description": "The plugin reads all 16 buttons, the hat switch and the four axes of the Thrustmaster T.16000M FCS joystick in Unity through the Input System.",
+  "dependencies": {
+    "com.unity.inputsystem": "1.7.0"
+  }
+}
