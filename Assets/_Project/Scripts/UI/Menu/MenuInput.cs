@@ -70,6 +70,10 @@ namespace Mehatron.UI.Menu
             float dt = Time.unscaledDeltaTime;
             int v = up.IsPressed() ? -1 : down.IsPressed() ? 1 : 0;
             int h = left.IsPressed() ? -1 : right.IsPressed() ? 1 : 0;
+            // Крестовина обода MOZA и хатка T.16000M приходят через плагины.
+            var dpad = PluginInput.Dpad;
+            if (v == 0) v = -dpad.y;
+            if (h == 0) h = dpad.x;
             Vertical = Repeat(v, ref heldV, ref timerV, dt);
             Horizontal = Repeat(h, ref heldH, ref timerH, dt);
 
