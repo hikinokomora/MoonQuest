@@ -42,5 +42,5 @@ MonoBehaviour:
   useRoll: 1
   useHeave: 1
   useYaw: 1
-  useSurge: 0
-  useSway: 0
+  useSurge: 1
+  useSway: 1

@@ -61,7 +61,7 @@ namespace Mehatron.Motion
         public bool useRoll = true;
         public bool useHeave = true;
         public bool useYaw = true;
-        public bool useSurge = false;
-        public bool useSway = false;
+        public bool useSurge = true;
+        public bool useSway = true;
     }
 }

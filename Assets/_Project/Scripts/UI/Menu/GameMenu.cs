@@ -499,6 +499,8 @@ namespace Mehatron.UI.Menu
                     Tog("Крен (наклон вбок)", () => S.motionRoll, x => S.motionRoll = x, "Повороты, боковые склоны, порывы ветра в буре.");
                     Tog("Подъём (вверх/вниз)", () => S.motionHeave, x => S.motionHeave = x, "Кочки, прыжки, приземления, лунотрясение.");
                     Tog("Рыскание (поворот)", () => S.motionYaw, x => S.motionYaw = x, "Короткий импульс при резких поворотах.");
+                    Tog("Продольное ускорение", () => S.motionSurge, x => S.motionSurge = x, "Толчок назад при разгоне и вперёд при торможении.");
+                    Tog("Боковое ускорение", () => S.motionSway, x => S.motionSway = x, "Боковой толчок в поворотах, порывах ветра и от ударов.");
                     Sld("Тряска по камням", 0f, 2f, 0.1f, () => S.roughnessIntensity, x => S.roughnessIntensity = x, x => $"×{x:0.0}", "Мелкая вибрация на каменистых участках.");
                     Head("Тактильный жилет bHaptics");
                     Tog("Тактильный отклик", () => S.hapticsEnabled, x => S.hapticsEnabled = x, "Включить/выключить жилет целиком.");

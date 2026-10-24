@@ -87,6 +87,8 @@ namespace Mehatron.Settings
         public bool motionRoll = true;
         public bool motionHeave = true;
         public bool motionYaw = true;
+        public bool motionSurge = true;
+        public bool motionSway = true;
         public float roughnessIntensity = 1f;
         public bool hapticsEnabled = true;
         public float hapticsIntensity = 1f;

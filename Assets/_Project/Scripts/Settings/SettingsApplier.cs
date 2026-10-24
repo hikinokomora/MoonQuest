@@ -323,6 +323,8 @@ namespace Mehatron.Settings
                 m.useRoll = s.motionRoll;
                 m.useHeave = s.motionHeave;
                 m.useYaw = s.motionYaw;
+                m.useSurge = s.motionSurge;
+                m.useSway = s.motionSway;
                 if (motionBase != null)
                 {
                     m.roughnessHeave = motionBase.roughnessHeave * s.roughnessIntensity;
