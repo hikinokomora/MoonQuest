@@ -49,6 +49,12 @@ namespace Mehatron.Vehicle
         public string recenterButtonPath = "<Joystick>/button3";
         public string resetRoverButtonPath = "<Joystick>/button4";
 
+        [Header("Руль MOZA (плагин MOZA SDK; номера кнопок как в MozaButton: 1 A, 2 B, 3 X, 4 Y; 0 — не использовать)")]
+        public int mozaStartButton = 1;
+        public int mozaHandbrakeButton = 2;
+        public int mozaRecenterButton = 3;
+        public int mozaResetRoverButton = 4;
+
         [Header("Самолётный джойстик")]
         [Tooltip("Части названия устройства (без учёта регистра), по которым джойстик считается самолётным, а не рулём.")]
         public string[] flightStickNames =
@@ -72,6 +78,13 @@ namespace Mehatron.Vehicle
         public bool useThrottleLever = true;
         public string throttleLeverPath = "<Joystick>/slider";
         public PedalRange throttleLeverRange = PedalRange.OneToMinusOne;
+        [Tooltip("Инвертировать ползунок тяги T.16000M, если «от себя» должно быть нулём.")]
+        public bool invertThrottleLever;
+        [Tooltip("Кнопки T.16000M (плагин Thrustmaster; номера 1..16, 1 — курок; 0 — не использовать).")]
+        public int stickStartButton = 1;
+        public int stickHandbrakeButton = 2;
+        public int stickRecenterButton = 3;
+        public int stickResetRoverButton = 4;
         public string stickStartButtonPath = "<Joystick>/trigger";
         public string stickHandbrakeButtonPath = "<Joystick>/button2";
         public string stickRecenterButtonPath = "<Joystick>/button3";

@@ -7,6 +7,8 @@ namespace Mehatron.Vehicle
     /// <summary>
     /// Ввод: руль/педали и самолётный джойстик по путям из <see cref="InputCalibration"/>,
     /// плюс клавиатура (WASD/стрелки, Space, Enter) и геймпад.
+    /// Если подключены руль MOZA или джойстик T.16000M, их данные берутся из плагинов (<see cref="PluginInput"/>),
+    /// а Input System для этих устройств не читается — иначе одно и то же считалось бы дважды.
     /// Руль и самолётный джойстик — оба <c>Joystick</c>, поэтому у каждого своя карта действий,
     /// привязанная только к его устройствам (иначе поворот ручки читался бы как педаль тормоза).
     /// Действия создаются в коде, чтобы калибровку можно было менять без правки .inputactions.
@@ -68,6 +70,7 @@ namespace Mehatron.Vehicle
         InputAction stickRoll, stickTwist, stickPitch, throttleLever;
         Buttons commonButtons, wheelButtons, stickButtons;
         float keyboardSteer;
+        bool pluginWheel, pluginStick;
         PedalWatch throttleWatch, brakeWatch, leverWatch;
         readonly List<string> wheelNames = new List<string>();
         readonly List<string> stickNames = new List<string>();
@@ -130,6 +133,7 @@ namespace Mehatron.Vehicle
             throttleLever = stickMap.AddAction("ThrottleLever", InputActionType.Value, c.throttleLeverPath);
             stickButtons = Buttons.Create(stickMap, c.stickHandbrakeButtonPath, c.stickStartButtonPath, c.stickRecenterButtonPath, c.stickResetRoverButtonPath);
 
+            PluginInput.ConfigureStick();
             AssignDevices();
             InputSystem.onDeviceChange += OnDeviceChange;
             commonMap.Enable();
@@ -170,6 +174,19 @@ namespace Mehatron.Vehicle
                 (stick ? sticks : wheels).Add(d);
                 (stick ? stickNames : wheelNames).Add(d.displayName);
             }
+            // Устройства, которые читаются через плагины, показываем под их именами и без дублей.
+            pluginWheel = PluginInput.WheelConnected;
+            pluginStick = PluginInput.StickConnected;
+            if (pluginWheel)
+            {
+                wheelNames.RemoveAll(n => n.IndexOf("moza", System.StringComparison.OrdinalIgnoreCase) >= 0);
+                wheelNames.Insert(0, PluginInput.WheelName);
+            }
+            if (pluginStick)
+            {
+                stickNames.RemoveAll(n => n.IndexOf("T.16000", System.StringComparison.OrdinalIgnoreCase) >= 0);
+                stickNames.Insert(0, PluginInput.StickName);
+            }
             // Пустой список = карта не привязана ни к одному устройству (null означало бы «ко всем»).
             wheelMap.devices = wheels.ToArray();
             stickMap.devices = sticks.ToArray();
@@ -182,14 +199,18 @@ namespace Mehatron.Vehicle
             var c = calibration;
             float dt = Time.deltaTime;
 
+            // Плагины подключаются и отключаются на лету.
+            if (pluginWheel != PluginInput.WheelConnected || pluginStick != PluginInput.StickConnected) AssignDevices();
+            bool moza = pluginWheel, t16 = pluginStick;
+
             // Руль
-            float wheel = ReadAxis(wheelSteer);
+            float wheel = moza ? PluginInput.WheelSteer : ReadAxis(wheelSteer);
             if (c.invertSteer) wheel = -wheel;
             wheel = Mathf.Abs(wheel) < c.steerDeadzone ? 0f : Mathf.Clamp(wheel * c.steerSensitivity, -1f, 1f);
 
             // Самолётный джойстик: крен/поворот ручки — руль, ручка от себя/на себя — газ/тормоз
-            float roll = c.ShapeStickAxis(ReadAxis(stickRoll));
-            float twist = c.ShapeStickAxis(ReadAxis(stickTwist));
+            float roll = c.ShapeStickAxis(t16 ? PluginInput.StickRoll : ReadAxis(stickRoll));
+            float twist = c.ShapeStickAxis(t16 ? PluginInput.StickTwist : ReadAxis(stickTwist));
             float stickSteer = c.stickSteerAxis switch
             {
                 StickSteerAxis.Roll => roll,
@@ -197,24 +218,34 @@ namespace Mehatron.Vehicle
                 _ => Mathf.Abs(roll) >= Mathf.Abs(twist) ? roll : twist,
             };
             stickSteer = Mathf.Clamp(stickSteer * c.stickSteerSensitivity, -1f, 1f);
-            float pitch = c.ShapeStickAxis(ReadAxis(stickPitch));
+            float pitch = c.ShapeStickAxis(t16 ? PluginInput.StickPitch : ReadAxis(stickPitch));
             if (c.invertStickPitch) pitch = -pitch;
-            float lever = c.useThrottleLever ? ReadPedal(throttleLever, c.throttleLeverRange, ref leverWatch) : 0f;
+            float lever = !c.useThrottleLever ? 0f
+                : t16 ? ReadPluginPedal(c.invertThrottleLever ? 1f - PluginInput.StickLever : PluginInput.StickLever, ref leverWatch)
+                : ReadPedal(throttleLever, c.throttleLeverRange, ref leverWatch);
+            float gas = moza ? ApplyPedalDeadzone(PluginInput.WheelThrottle) : ReadPedal(throttlePedal, c.throttleRange, ref throttleWatch);
+            float brake = moza ? ApplyPedalDeadzone(PluginInput.WheelBrake) : ReadPedal(brakePedal, c.brakeRange, ref brakeWatch);
 
             float alt = altSteer.ReadValue<float>();
             keyboardSteer = Mathf.MoveTowards(keyboardSteer, alt, keyboardSteerSpeed * dt);
             Steer = Strongest(Strongest(wheel, stickSteer), keyboardSteer);
 
             // Педали
-            Throttle = Mathf.Max(Mathf.Max(ReadPedal(throttlePedal, c.throttleRange, ref throttleWatch), altThrottle.ReadValue<float>()),
-                                 Mathf.Max(pitch, lever));
-            Brake = Mathf.Max(Mathf.Max(ReadPedal(brakePedal, c.brakeRange, ref brakeWatch), altBrake.ReadValue<float>()),
-                              -pitch);
+            Throttle = Mathf.Max(Mathf.Max(gas, altThrottle.ReadValue<float>()), Mathf.Max(pitch, lever));
+            Brake = Mathf.Max(Mathf.Max(brake, altBrake.ReadValue<float>()), -pitch);
 
-            Handbrake = commonButtons.handbrake.IsPressed() || wheelButtons.handbrake.IsPressed() || stickButtons.handbrake.IsPressed();
-            StartPressed = Pressed(commonButtons.start, wheelButtons.start, stickButtons.start);
-            RecenterPressed = Pressed(commonButtons.recenter, wheelButtons.recenter, stickButtons.recenter);
-            ResetPressed = Pressed(commonButtons.reset, wheelButtons.reset, stickButtons.reset);
+            Handbrake = commonButtons.handbrake.IsPressed()
+                || (moza ? PluginInput.WheelHandbrake || PluginInput.WheelButton(c.mozaHandbrakeButton) : wheelButtons.handbrake.IsPressed())
+                || (t16 ? PluginInput.StickButton(c.stickHandbrakeButton) : stickButtons.handbrake.IsPressed());
+            StartPressed = commonButtons.start.WasPressedThisFrame()
+                || (moza ? PluginInput.WheelButtonDown(c.mozaStartButton) : wheelButtons.start.WasPressedThisFrame())
+                || (t16 ? PluginInput.StickButtonDown(c.stickStartButton) : stickButtons.start.WasPressedThisFrame());
+            RecenterPressed = commonButtons.recenter.WasPressedThisFrame()
+                || (moza ? PluginInput.WheelButtonDown(c.mozaRecenterButton) : wheelButtons.recenter.WasPressedThisFrame())
+                || (t16 ? PluginInput.StickButtonDown(c.stickRecenterButton) : stickButtons.recenter.WasPressedThisFrame());
+            ResetPressed = commonButtons.reset.WasPressedThisFrame()
+                || (moza ? PluginInput.WheelButtonDown(c.mozaResetRoverButton) : wheelButtons.reset.WasPressedThisFrame())
+                || (t16 ? PluginInput.StickButtonDown(c.stickResetRoverButton) : stickButtons.reset.WasPressedThisFrame());
 
             if (DebugOverride is Override o)
             {
@@ -227,10 +258,12 @@ namespace Mehatron.Vehicle
 
         static float Strongest(float a, float b) => Mathf.Abs(a) >= Mathf.Abs(b) ? a : b;
 
-        static bool Pressed(InputAction a, InputAction b, InputAction c) =>
-            a.WasPressedThisFrame() || b.WasPressedThisFrame() || c.WasPressedThisFrame();
-
         static float ReadAxis(InputAction action) => action.controls.Count > 0 ? action.ReadValue<float>() : 0f;
+
+        float ApplyPedalDeadzone(float v) => v < calibration.pedalDeadzone ? 0f : Mathf.Clamp01(v);
+
+        /// <summary>Значение 0..1 из плагина; как и у Input System, учитывается только после первого движения.</summary>
+        float ReadPluginPedal(float raw, ref PedalWatch watch) => watch.Update(raw) ? ApplyPedalDeadzone(raw) : 0f;
 
         float ReadPedal(InputAction action, PedalRange range, ref PedalWatch watch)
         {
