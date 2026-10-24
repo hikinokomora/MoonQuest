@@ -850,14 +850,19 @@ namespace Mehatron.UI.Menu
             var vest = FindFirstObjectByType<BhapticsVestDevice>();
             bool vestOk = vest != null && vest.IsConnected;
             bool platformOk = false;
+            string platformInfo = "эмуляция (F1)";
             foreach (var p in FindObjectsByType<MotionPlatformBehaviour>(FindObjectsSortMode.None))
-                if (p is not DebugMotionPlatform && p.IsConnected) platformOk = true;
+            {
+                if (p is DebugMotionPlatform || !p.IsConnected) continue;
+                platformOk = true;
+                platformInfo = p is FourDofMotionPlatform ? "X-DOF 4DOF, телеметрия идёт" : "подключена";
+            }
             statusText.text =
                 $"{Dot(vr)}  Шлем VR  <color=#8fa3b8>{(vr ? "подключён" : "нет — режим монитора")}</color>\n" +
                 $"{Dot(inp != null && inp.WheelDevices.Count > 0)}  Руль  <color=#8fa3b8>{Short(wheel)}</color>\n" +
                 $"{Dot(inp != null && inp.FlightStickDevices.Count > 0)}  Джойстик  <color=#8fa3b8>{Short(stick)}</color>\n" +
                 $"{Dot(vestOk)}  Жилет  <color=#8fa3b8>{(vestOk ? "bHaptics SDK2" : "эмуляция (F1)")}</color>\n" +
-                $"{Dot(platformOk)}  Платформа  <color=#8fa3b8>{(platformOk ? "подключена" : "эмуляция (F1)")}</color>";
+                $"{Dot(platformOk)}  Платформа  <color=#8fa3b8>{platformInfo}</color>";
         }
 
         static string Short(string s) => s.Length > 26 ? s.Substring(0, 25) + "…" : s;
