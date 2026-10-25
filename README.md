@@ -126,13 +126,9 @@ F8 — автопилот (демо без водителя) · F7 — засч�
 - `Scripts/Editor/MoonSceneBuilder.cs` — сборка сцены (ровер, HUD, менеджеры); `MoonWorldGen.cs` — рельеф,
   4 слоя грунта с процедурными текстурами (реголит, базальт «морей», щебень, лучи выбросов), камни, база, ориентиры.
   Текстуры грунта создаются один раз в `Textures/T_*.png` — удалите их, чтобы пересоздать.
-- `Models/` — все модели из Blender. Исходник `Art/MoonAssets.blend`, генераторы — `Art/tools/*.py`
-  (`rover.py`, `props.py`, `rocks.py`). Перегенерация: в Blender выполнить `rover.build()` / `props.build_all()` /
-  `rocks.build()` и соответствующий `export`, затем в Unity — Mehatron → Build Moon Scene.
-  Модели миссии (ретранслятор, контейнер O2): `Art/tools/mission_props.py` (`build_all()` + `export_all(out)`),
-  исходник `Art/MissionProps.blend`.
-- Проверка целостности модели (нет ли висящих в воздухе деталей): в Blender `validate.validate("Rover")` —
-  в `floating` должен быть пустой список. Экспортируйте ровер только после чистой проверки.
+- `Models/` — все модели из Blender. Исходники — `Art/*.blend` (`MoonAssets`, `MissionProps`, `Rover`).
+  Скрипты генерации моделей хранятся только локально (`Art/tools/`, в репозиторий не входят). После пересоздания
+  моделей в Unity нужно выполнить Mehatron → Build Moon Scene.
 - Подвеска ровера анимирована: рычаги (`Arm_U/L_*`) и амортизаторы (`Damper_*`) тянутся к шаровым опорам кулаков
   (`SuspensionRig`), кулак с крылом едет вместе с колесом и рулится вокруг шкворня. Ход колеса вверх ограничен
   `maxCompression` в `RoverController` (физический отбойник + визуальный предел).
