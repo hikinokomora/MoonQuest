@@ -115042,6 +115042,7 @@ GameObject:
   m_Component:
   - component: {fileID: 762965289}
   - component: {fileID: 762965288}
+  - component: {fileID: 762965290}
   - component: {fileID: 762965287}
   m_Layer: 0
   m_Name: Motion
@@ -115066,6 +115067,7 @@ MonoBehaviour:
   rover: {fileID: 1208539582}
   outputs:
   - {fileID: 762965288}
+  - {fileID: 762965290}
 --- !u!114 &762965288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115082,6 +115084,34 @@ MonoBehaviour:
   previewMaxAngle: 20
   previewMaxHeave: 0.15
   logCalls: 1
+--- !u!114 &762965290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762965286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d3a5c1e9b2f4a6d8e0c1b2a3f4e5d60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Mehatron.Motion.FourDofMotionPlatform
+  pitchRollFullScaleDeg: 15
+  pitchRollLimitDeg: 20
+  yawRateFullScale: 60
+  surgeFullScale: 8
+  swayFullScale: 8
+  heaveFullScale: 10
+  accelLimit: 20
+  impactHold: 0.12
+  heaveRelease: 0.05
+  watchdogSeconds: 0.5
+  invertPitch: 0
+  invertRoll: 0
+  invertYaw: 0
+  invertSurge: 0
+  invertSway: 0
+  invertHeave: 0
 --- !u!4 &762965289
 Transform:
   m_ObjectHideFlags: 0

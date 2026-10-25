@@ -133,10 +133,11 @@ namespace Mehatron.EditorTools
 
             var motionGo = new GameObject("Motion");
             var debugPlatform = motionGo.AddComponent<DebugMotionPlatform>();
+            var fourDof = motionGo.AddComponent<FourDofMotionPlatform>();
             var cueing = motionGo.AddComponent<MotionCueing>();
             Set(cueing, "settings", motionSettings);
             Set(cueing, "rover", rover);
-            SetList(cueing, "outputs", new List<Object> { debugPlatform });
+            SetList(cueing, "outputs", new List<Object> { debugPlatform, fourDof });
 
             var hapticsGo = new GameObject("Haptics");
             var debugVest = hapticsGo.AddComponent<DebugHapticsDevice>();
