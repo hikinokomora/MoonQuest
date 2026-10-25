@@ -43,3 +43,6 @@ crashlytics-buildsettings.json
 # Python
 __pycache__/
 *.pyc
+
+# Локальные скрипты Blender (не публикуются)
+/Art/tools/
